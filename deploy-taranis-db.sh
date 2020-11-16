@@ -1,5 +1,8 @@
 #! /bin/sh
 
+cd taranis-db
+svn update
+
 docker ps -a | awk '{ print $1,$2 }' | grep magnoabreu/taranis-db:1.0 | awk '{print $1 }' | xargs -I {} docker rm -f {}
 docker rmi magnoabreu/taranis-db:1.0
 docker build --tag=magnoabreu/taranis-db:1.0 --rm=true .
