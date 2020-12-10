@@ -1,21 +1,19 @@
 #! /bin/sh
 
-cd thundercloud/
+cd taranis/
 svn update
 mvn clean package
 
-docker ps -a | awk '{ print $1,$2 }' | grep sisgeodef/thundercloud:1.0 | awk '{print $1 }' | xargs -I {} docker rm -f {}
-docker rmi sisgeodef/thundercloud:1.0
+docker ps -a | awk '{ print $1,$2 }' | grep magnoabreu/taranis:1.0 | awk '{print $1 }' | xargs -I {} docker rm -f {}
+docker rmi magnoabreu/taranis:1.0
 
-docker build --tag=sisgeodef/thundercloud:1.0 --rm=true .
+docker build --tag=magnoabreu/taranis:1.0 --rm=true .
 
-docker run --name thundercloud --hostname=thundercloud \
-	-e ARCHIMEDES_CONFIG_URI=http://archimedes:36206/ \
-	-e CONFIG_PROFILES=default \
+docker run --name taranis --hostname=taranis \
 	-v /etc/localtime:/etc/localtime:ro \
-	-p 36003:36003 \
-	-d sisgeodef/thundercloud:1.0	
+	-p 36103:36103 \
+	-d magnoabreu/taranis:1.0	
 
-docker network connect sisgeodef thundercloud
-docker network connect apolo thundercloud
+docker network connect sisgbeodef taranis
+docker network connect apolo taranis
 
