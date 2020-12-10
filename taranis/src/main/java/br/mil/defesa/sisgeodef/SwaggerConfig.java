@@ -32,12 +32,12 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
  
 		ApiInfoBuilder apiInfoBuilder = new ApiInfoBuilder();
  
-		apiInfoBuilder.title("THUNDERCLOUD");
-		apiInfoBuilder.description("Solucionador de Cor meteorológica");
+		apiInfoBuilder.title("TARANIS");
+		apiInfoBuilder.description("Dados Volumétricos");
 		apiInfoBuilder.version("1.0");
 		apiInfoBuilder.termsOfServiceUrl("#");
 		apiInfoBuilder.license("Licença - Open Source");
-		apiInfoBuilder.licenseUrl("http://www.casnav.mb");
+		apiInfoBuilder.licenseUrl("http://www.cmabreu.com.br");
 		apiInfoBuilder.contact(this.contato());
  
 		return apiInfoBuilder;
@@ -46,7 +46,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 	
 	
 	private Contact contato() {
- 		return new Contact(	"Centro de Análises de Sistemas Navais - CASNAV", "http://www.casnav.mb", "");	
+ 		return new Contact(	"Carlos Magno O. Abreu", "http://www.cmabreu.com.br", "");	
 	}
 	
 	

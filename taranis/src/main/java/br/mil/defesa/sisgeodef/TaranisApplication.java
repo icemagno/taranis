@@ -12,10 +12,10 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableCaching
 @ComponentScan("br.mil.defesa.sisgeodef")
 @EnableRabbit
-public class ThundercloudApplication {
+public class TaranisApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ThundercloudApplication.class, args);
+		SpringApplication.run(TaranisApplication.class, args);
 	}
 	
 }
