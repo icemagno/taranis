@@ -14,6 +14,6 @@ docker run --name taranis --hostname=taranis \
 	-p 36103:36103 \
 	-d magnoabreu/taranis:1.0	
 
-docker network connect sisgbeodef taranis
+docker network connect sisgeodef taranis
 docker network connect apolo taranis
 
