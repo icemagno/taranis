@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.mil.defesa.sisgeodef.services.RadarSipamService;
+import br.mil.defesa.sisgeodef.services.RadarService;
 
 @RestController
-public class RadarSipamController {
+public class RadarController {
 
 	@Autowired
-	RadarSipamService radarSipamService; 
+	RadarService radarService; 
 	
 	@RequestMapping(value = "/radar", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_UTF8_VALUE )
 	public @ResponseBody String getBuildings( @RequestParam(value="count",required=true) String count,
@@ -22,7 +22,7 @@ public class RadarSipamController {
 			@RequestParam(value="r",required=true) String r,
 			@RequestParam(value="t",required=true) String t,
 			@RequestParam(value="b",required=true) String b) {
-		return radarSipamService.getRadar(count, l, r, t, b);
+		return radarService.getRadar(count, l, r, t, b);
 	}
 	
 }

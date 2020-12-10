@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,9 +13,9 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RadarSipamService {
+public class RadarService {
 
-	private String connectionString = "jdbc:postgresql://thundercloud-db:5432/thundercloud?ApplicationName=Atlas";  	
+	private String connectionString = "jdbc:postgresql://taranis-db:5432/taranis?ApplicationName=Taranis";  	
 	private String user = "postgres";  	
 	private String password = "admin";  	
 	
@@ -36,6 +37,15 @@ public class RadarSipamService {
 		        try {
 		        	@SuppressWarnings("unused")
 					JSONArray jarr = job.getJSONArray("features");
+		        	for( int x=0; x < jarr.length(); x++ ) {
+		        		JSONObject feature = jarr.getJSONObject( x );
+		        		JSONObject props = feature.getJSONObject("properties").getJSONObject("getproperties");
+		        		Iterator<String> keys = props.keys();
+		        		while(keys. hasNext()) {
+		        			String key = keys.next();
+		        			System.out.println("  > " + key );
+		        		}
+		        	}
 		        } catch ( JSONException je ) { 
 		        	job.put("features", new JSONArray("[]") );
 		        }
