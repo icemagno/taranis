@@ -2,28 +2,48 @@ package br.mil.defesa.sisgeodef;
 
 import java.io.IOException;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-public class CORSFilter extends OncePerRequestFilter {
+public class CORSFilter implements Filter {
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void init(FilterConfig filterConfig) {
+    	//
+    }	
+  
+    public void destroy() {
+    	//
+    }
 
-    	response.setHeader("Access-Control-Allow-Origin", "*");
+	@Override
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)	throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
+		
+        String origin = request.getHeader("Origin");
+
+        System.out.println( "Filter from " + origin );        
+        // Access-Control-Allow-Origin
+        response.setHeader("Access-Control-Allow-Origin", origin );
+        response.setHeader("Vary", "Origin");
+
         response.setHeader("Access-Control-Allow-Credentials", "true");
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
 		response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers");
+        response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Origin, X-CSRF-TOKEN, Accept, Access-Control-Request-Method, Access-Control-Request-Headers");
        
-        filterChain.doFilter(request, response);
-	}	
-	
-
+        
+        chain.doFilter(request, response);
+		
+	}
+    
 }
