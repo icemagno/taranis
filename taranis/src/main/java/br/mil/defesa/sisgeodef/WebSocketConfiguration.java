@@ -12,7 +12,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 	 
 	 @Override
 	 public void registerStompEndpoints(StompEndpointRegistry registry) {
-		 registry.addEndpoint("/radar-data").withSockJS();
+		 registry.addEndpoint("/radar-data").setAllowedOrigins("*").withSockJS();
 	 }	
 
 	 

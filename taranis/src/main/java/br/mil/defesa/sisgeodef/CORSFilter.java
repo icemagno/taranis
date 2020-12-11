@@ -31,7 +31,7 @@ public class CORSFilter implements Filter {
 		
         String origin = request.getHeader("Origin");
 
-        System.out.println( "Filter from " + origin );        
+        System.out.println( "Access from " + origin );        
         // Access-Control-Allow-Origin
         response.setHeader("Access-Control-Allow-Origin", origin );
         response.setHeader("Vary", "Origin");
