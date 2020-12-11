@@ -30,9 +30,6 @@ public class CORSFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 		
         String origin = request.getHeader("Origin");
-
-        System.out.println( "Access from " + origin );        
-        
         response.addHeader("Access-Control-Allow-Origin", origin );
         response.setHeader("Vary", "Origin");
 
