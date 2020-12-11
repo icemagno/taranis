@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import br.mil.defesa.sisgeodef.misc.Cylinder;
+import br.mil.defesa.sisgeodef.misc.Point;
 
 @Service
 public class RadarService {
@@ -47,20 +48,22 @@ public class RadarService {
 		        		JSONObject feature = jarr.getJSONObject( x );
 		        		JSONArray coordinates = feature.getJSONObject("geometry").getJSONArray("coordinates");
 
-		        		/*
 		        		JSONObject props = feature.getJSONObject("properties").getJSONObject("getproperties");
 		        		Iterator<String> keys = props.keys();
-		        		while(keys. hasNext()) {
+		        		while(keys.hasNext()) {
+		        			
 		        			String key = keys.next();
-		        			System.out.println("  > " + key );
+		        			if( key.startsWith("dbz_") ) {
+		        				int height = Integer.valueOf( key.substring(4) );
+		        				double value = props.getDouble(key);
+		        				
+				        		Point pt = new Point( coordinates.getDouble(1), coordinates.getDouble(0), height, value, "red" );
+				        		simpMessagingTemplate.convertAndSend("/points/dbz", pt );
+				        		
+		        			}
+		        			
 		        		}
-		        		*/
 		        		
-		        		Cylinder cyl = new Cylinder();
-		        		cyl.setLon( coordinates.getDouble(0) );
-		        		cyl.setLat( coordinates.getDouble(1) );
-		        		
-		        		simpMessagingTemplate.convertAndSend("/points/dbz", cyl );
 		        		
 		        	}
 		        } catch ( JSONException je ) { 
