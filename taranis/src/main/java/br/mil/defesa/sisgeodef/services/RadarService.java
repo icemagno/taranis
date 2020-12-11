@@ -10,11 +10,14 @@ import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RadarService {
+	
+	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
 	
 	private String connectionString = "jdbc:postgresql://taranis-db:5432/taranis?ApplicationName=Taranis";  	
