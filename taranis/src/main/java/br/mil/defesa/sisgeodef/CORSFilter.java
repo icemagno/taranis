@@ -32,18 +32,22 @@ public class CORSFilter implements Filter {
         String origin = request.getHeader("Origin");
 
         System.out.println( "Access from " + origin );        
-        // Access-Control-Allow-Origin
-        response.setHeader("Access-Control-Allow-Origin", origin );
+        
+        response.addHeader("Access-Control-Allow-Origin", origin );
         response.setHeader("Vary", "Origin");
 
         response.setHeader("Access-Control-Allow-Credentials", "true");
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
 		response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Origin, X-CSRF-TOKEN, Accept, Access-Control-Request-Method, Access-Control-Request-Headers");
-       
+        response.addHeader("Access-Control-Expose-Headers", "X-Auth-Token");
         
-        chain.doFilter(request, response);
-		
+        if ( request.getMethod().equals("OPTIONS") ) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            chain.doFilter(request, response);
+        }
+        
 	}
     
 }
