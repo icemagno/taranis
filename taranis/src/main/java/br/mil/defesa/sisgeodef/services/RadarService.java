@@ -10,11 +10,13 @@ import java.util.Iterator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RadarService {
-
+	private SimpMessagingTemplate simpMessagingTemplate;
+	
 	private String connectionString = "jdbc:postgresql://taranis-db:5432/taranis?ApplicationName=Taranis";  	
 	private String user = "postgres";  	
 	private String password = "admin";  	
@@ -45,6 +47,9 @@ public class RadarService {
 		        			String key = keys.next();
 		        			System.out.println("  > " + key );
 		        		}
+		        		
+		        		simpMessagingTemplate.convertAndSend("/points/dbz", feature.toString() );
+		        		
 		        	}
 		        } catch ( JSONException je ) { 
 		        	job.put("features", new JSONArray("[]") );
