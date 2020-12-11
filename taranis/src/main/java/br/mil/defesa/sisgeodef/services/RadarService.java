@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import br.mil.defesa.sisgeodef.misc.DBZColorRamp;
 import br.mil.defesa.sisgeodef.misc.Point;
 
 @Service
@@ -22,6 +23,7 @@ public class RadarService {
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
 	
+	private DBZColorRamp dbzRamp = new DBZColorRamp();
 	private String connectionString = "jdbc:postgresql://taranis-db:5432/taranis?ApplicationName=Taranis";  	
 	private String user = "postgres";  	
 	private String password = "admin";  	
@@ -57,7 +59,7 @@ public class RadarService {
 		        				int height = Integer.valueOf( key.substring(4) );
 		        				double value = props.getDouble(key);
 		        				
-				        		Point pt = new Point( coordinates.getDouble(1), coordinates.getDouble(0), height, value, "red" );
+				        		Point pt = new Point( coordinates.getDouble(1), coordinates.getDouble(0), height, value, dbzRamp.getColor(value) );
 				        		simpMessagingTemplate.convertAndSend("/points/dbz", pt );
 				        		
 		        			}
@@ -69,7 +71,7 @@ public class RadarService {
 		        } catch ( JSONException je ) { 
 		        	job.put("features", new JSONArray("[]") );
 		        }
-		        result = job.toString();
+		        result = new JSONObject("{}").toString(); //job.toString();
 			}
         } catch (SQLException e) {
         	e.printStackTrace();
