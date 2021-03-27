@@ -1,0 +1,10 @@
+ --select sgs.id, ST_AsText(sgs.the_geom),sgs.the_geom, ss.* from radar.sipam_grade_sbbe sgs
+ --join radar.sipam_sbbe ss on sgs.id = ss.id_grid
+ --where sgs.id = 136794
+ 
+ 
+ select * from radar.sipam_grade_sbbe sgs
+ where sgs.id = 136794
+ 
+ select * from radar.sipam_sbbe ss
+ where ss.id_grid = 136794
