@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -19,23 +20,29 @@ import br.mil.defesa.sisgeodef.misc.Point;
 
 @Service
 public class RadarService {
+
+	@Value("${spring.datasource.url}")
+	private String connectionString;	
+
+	@Value("${spring.datasource.username}")
+	private String userName;	
+
+	@Value("${spring.datasource.password}")
+	private String userPassword;	
+	
 	
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
-	
 	private DBZColorRamp dbzRamp = new DBZColorRamp();
-	private String connectionString = "jdbc:postgresql://taranis-db:5432/taranis?ApplicationName=Taranis";  	
-	private String user = "postgres";  	
-	private String password = "admin";  	
 	
 	public String getRadar( String count, String l, String r, String t, String b ) {
 		String result = "{}";
 		String sql = "select * from public.getsipamradar( "+count+", "+l+", "+b+", "+r+", "+t+") as resultset";
 		
-		System.out.println( sql );
+		//System.out.println( sql );
 		
 		try (
-			Connection sqlConnection  =  DriverManager.getConnection(connectionString, user, password);
+			Connection sqlConnection  =  DriverManager.getConnection(connectionString, userName, userPassword);
 			PreparedStatement ps = sqlConnection.prepareStatement( sql ); 
 	        ResultSet rs = ps.executeQuery() ) {
 		    while (rs.next() ) {

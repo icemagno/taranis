@@ -1,8 +1,5 @@
 #! /bin/sh
 
-cd taranis-db
-svn update
-
 docker ps -a | awk '{ print $1,$2 }' | grep magnoabreu/taranis-db:1.0 | awk '{print $1 }' | xargs -I {} docker rm -f {}
 docker rmi magnoabreu/taranis-db:1.0
 docker build --tag=magnoabreu/taranis-db:1.0 --rm=true .
@@ -17,5 +14,5 @@ docker run --name taranis-db --hostname=taranis-db \
 -v /srv/taranis-db/:/var/lib/postgresql/ \
 -d magnoabreu/taranis-db:1.0
 
-#docker exec -it taranis-db pg_restore -U postgres -h localhost -W -d taranis /opt/taranis-db/taranis-27-10.tar
+#docker exec -it taranis-db pg_restore -U postgres -h localhost -W -d taranis /opt/taranis-db/taranis.tar
 
