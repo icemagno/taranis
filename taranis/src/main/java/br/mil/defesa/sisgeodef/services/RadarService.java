@@ -39,7 +39,7 @@ public class RadarService {
 		String result = "{}";
 		String sql = "select * from public.getsipamradar( "+count+", "+l+", "+b+", "+r+", "+t+") as resultset";
 		
-		//System.out.println( sql );
+		System.out.println( sql );
 		
 		try (
 			Connection sqlConnection  =  DriverManager.getConnection(connectionString, userName, userPassword);
