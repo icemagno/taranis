@@ -16,3 +16,4 @@
 	  }
 	});
 	viewer.imageryLayers.addImageryProvider( radarProvider );	
+	
