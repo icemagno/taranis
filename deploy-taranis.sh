@@ -11,6 +11,7 @@ docker build --tag=magnoabreu/taranis:1.0 --rm=true .
 
 docker run --name taranis --hostname=taranis \
 	-v /etc/localtime:/etc/localtime:ro \
+	-v /srv/taranis/:/taranis/ \
 	-p 36103:36103 \
 	-d magnoabreu/taranis:1.0	
 
