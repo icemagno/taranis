@@ -8,3 +8,28 @@
  
  select * from radar.sipam_sbbe ss
  where ss.id_grid = 136794
+
+
+select count(*) from public.sipam_sbbe where data_hora = timestamp '2016-04-18 22:55:27'
+
+select *, ST_GeomFromGeoHash(hash) from geohashes  limit 100
+
+
+
+
+
+select
+	ST_Y( ST_Transform( ST_Centroid( spg.the_geom )::geometry, 4326) ) as "latitude", 
+	ST_X( ST_Transform( ST_Centroid( spg.the_geom )::geometry, 4326) ) as "longitude",
+    	ST_Transform( ST_Centroid(spg.the_geom)::geometry, 4326) as "ponto",
+	sp.* 
+from 
+	sipam_grade_sbbe spg 
+join 
+	sipam_sbbe sp on sp.id_grid = spg.id 
+where 
+	data_hora = timestamp '2016-04-18 22:55:27'
+and
+	dbz_03000 is not null
+limit 1000
+	

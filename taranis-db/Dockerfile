@@ -1,5 +1,3 @@
-FROM kartoza/postgis
+FROM kartoza/postgis:12.0
 MAINTAINER magno.mabreu@gmail.com
 
-RUN mkdir /opt/taranis-db
-COPY ./taranis.tar /opt/taranis-db

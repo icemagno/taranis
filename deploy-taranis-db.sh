@@ -10,6 +10,7 @@ docker run --name taranis-db --hostname=taranis-db \
 -e POSTGRES_DBNAME=taranis \
 -e ALLOW_IP_RANGE='0.0.0.0/0' \
 -v /etc/localtime:/etc/localtime:ro \
+-p 36701:5432 \
 -e POSTGRES_MULTIPLE_EXTENSIONS=postgis,hstore,postgis_topology \
 -v /srv/taranis-db/:/var/lib/postgresql/ \
 -d magnoabreu/taranis-db:1.0
