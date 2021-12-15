@@ -1,5 +1,6 @@
 package br.mil.defesa.sisgeodef.misc;
 
+import java.awt.Color;
 import java.io.Serializable;
 
 public class Point implements Serializable {
@@ -8,9 +9,9 @@ public class Point implements Serializable {
 	private Double lon;
 	private Integer altitude;
 	private Double value;
-	private String color;
+	private Color color;
 	
-	public Point(Double lat, Double lon, Integer altitude, Double value, String color) {
+	public Point(Double lat, Double lon, Integer altitude, Double value, Color color) {
 		this.lat = lat;
 		this.lon = lon;
 		this.altitude = altitude;
@@ -34,7 +35,7 @@ public class Point implements Serializable {
 		return value;
 	}
 	
-	public String getColor() {
+	public Color getColor() {
 		return color;
 	}
 

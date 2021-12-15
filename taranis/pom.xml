@@ -1,97 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
-	<groupId>br.com.cmabreu</groupId>
+
+	<groupId>br.mil.defesa.sisgeodef</groupId>
     <artifactId>taranis</artifactId>
 	<version>1.0</version>
     <packaging>war</packaging>
 
 	<name>taranis</name>
-	<description>Geoportal Atlas</description>
+	<description>Gerador de Nuvem de Pontos</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.9.RELEASE</version>
-		<relativePath/> 
+		<version>2.5.4</version>
 	</parent>
-    
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+		<spring-cloud.version>2020.0.3</spring-cloud.version>
 		<maven.test.skip>true</maven.test.skip>
-	</properties> 	
-  	
-    <dependencies>
+		<geotools.version>21.0</geotools.version>
+	</properties>
+	
+	<dependencies>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
+            <groupId>org.citydb</groupId>
+            <artifactId>impexp</artifactId>
+            <version>1.0</version>
         </dependency>
- 	
+		
+		<!-- https://mvnrepository.com/artifact/com.vividsolutions/jts -->
+		<dependency>
+		    <groupId>com.vividsolutions</groupId>
+		    <artifactId>jts</artifactId>
+		    <version>1.13</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
+	
+		<!-- https://mvnrepository.com/artifact/org.geotools/gt-api -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
+		    <groupId>org.geotools</groupId>
+		    <artifactId>gt-api</artifactId>
+		    <version>10.5</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.geotools/gt-epsg-hsql -->
+		<dependency>
+		    <groupId>org.geotools</groupId>
+		    <artifactId>gt-epsg-hsql</artifactId>
+		    <version>${geotools.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.geotools/gt-main -->
+		<dependency>
+		    <groupId>org.geotools</groupId>
+		    <artifactId>gt-main</artifactId>
+		    <version>${geotools.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.geotools/gt-metadata -->
+		<dependency>
+		    <groupId>org.geotools</groupId>
+		    <artifactId>gt-metadata</artifactId>
+		    <version>${geotools.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.geotools/gt-opengis -->
+		<dependency>
+		    <groupId>org.geotools</groupId>
+		    <artifactId>gt-opengis</artifactId>
+		    <version>${geotools.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.geotools/gt-referencing -->
+		<dependency>
+		    <groupId>org.geotools</groupId>
+		    <artifactId>gt-referencing</artifactId>
+		    <version>${geotools.version}</version>
 		</dependency>
 			
+			
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		</dependency>
+			
+		<!-- https://mvnrepository.com/artifact/com.eclipsesource.minimal-json/minimal-json -->
+		<dependency>
+		    <groupId>com.eclipsesource.minimal-json</groupId>
+		    <artifactId>minimal-json</artifactId>
+		    <version>0.9.5</version>
+		</dependency>
+	
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>		
+	
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger2</artifactId>
+		    <version>2.9.2</version>
 		</dependency>
 
 		<dependency>
-		    <groupId>org.springframework.security</groupId>
-		    <artifactId>spring-security-taglibs</artifactId>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger-ui</artifactId>
+		    <version>2.9.2</version>
 		</dependency>		
 		
 		<dependency>
-		    <groupId>com.fasterxml.jackson.datatype</groupId>
-		    <artifactId>jackson-datatype-json-org</artifactId>
-		</dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>	
 		
 		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope>
-		</dependency>				
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>			
 		
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+		    <version>20160810</version>
+        </dependency>	
+		
+		
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>	
+        
 		<dependency>
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
 		    <version>2.6</version>
-		</dependency>		
-		     
-    </dependencies>
+		</dependency>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-    
+	</dependencies>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -102,9 +166,64 @@
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
-	</dependencyManagement>    
-    
+	</dependencyManagement>
+
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+
 	<repositories>
+
+	    
+	    <repository> 
+	        <id>geosolutions.repository</id> 
+	        <name>Geosolutions Repository</name> 
+	        <url>http://maven.geo-solutions.it/</url> 
+	    </repository>
+	    <repository>
+	        <id>osgeo</id>
+	        <name>Open Source Geospatial Foundation Repository</name>
+	        <url>https://repo.osgeo.org/repository/release</url>
+	    </repository>
+	    <repository>
+	        <id>osgeo-snap</id>
+	        <name>Open Source Geospatial Foundation Repository Snapshot</name>
+	        <url>https://repo.osgeo.org/repository/snapshot</url>
+	    </repository>
+		<repository>      
+		  <id>geotools</id>
+		  <name>Geotools repository</name>
+		  <url>https://repo.osgeo.org/repository/geotools-releases/</url>
+		</repository>  
+
+
+
+
+		  
+	    <repository> 
+	        <id>repository.spring.release</id> 
+	        <name>Spring GA Repository</name> 
+	        <url>http://repo.spring.io/release</url> 
+	    </repository>	
+	
+		<repository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>https://repo1.maven.org/maven2</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
 		<repository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>
@@ -113,17 +232,18 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+
 		<repository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
 			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 		</repository>
+
 	</repositories>
 
+
 	<pluginRepositories>
+
 		<pluginRepository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>
@@ -132,13 +252,13 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
+
 		<pluginRepository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
 			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 		</pluginRepository>
-	</pluginRepositories>    
+
+	</pluginRepositories>
+
 </project>

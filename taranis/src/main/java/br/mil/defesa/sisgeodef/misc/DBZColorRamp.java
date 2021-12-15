@@ -1,5 +1,6 @@
 package br.mil.defesa.sisgeodef.misc;
 
+import java.awt.Color;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
@@ -56,6 +57,11 @@ public class DBZColorRamp {
 	    double key = (value - below > above - value ? above : below);
 	    String result = colorRamp.get(key);
 	    return result;
+	}
+	
+	public Color getColorAsColor( double value ) {
+		String hex = getColor(value);
+		return Color.decode( hex );
 	}
 	
 	
