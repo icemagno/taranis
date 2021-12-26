@@ -27,10 +27,12 @@ package de.tum.gis.tiles3d.database.postgresql;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -106,9 +108,14 @@ public class PostgreSqDBManager implements DBManager {
 		
 		List<Coordinate> coordinateList = new ArrayList<Coordinate>();
 		List<Color> colorList = new ArrayList<Color>();
+		List<Float> dataList = new ArrayList<Float>();
+		
 		try {	
 			stmt = connection.createStatement();
-			stmt.setFetchSize(fetchSize);
+			
+			// Magno
+			//stmt.setFetchSize(fetchSize);
+			
 			result = stmt.executeQuery(queryCommand);
 			
 			double minZ = Integer.MAX_VALUE;
@@ -122,16 +129,18 @@ public class PostgreSqDBManager implements DBManager {
 				Coordinate ecefCoordinate = CoordianteConverter.convertPointToWGS84Cartesian( inputCoordinate, config.getSrid() );	
 				coordinateList.add(ecefCoordinate);
 				
-	        	if (z < minZ)
-	        		minZ = z;
-	        	if (z > maxZ)
-	        		maxZ = z;   
+	        	if (z < minZ) minZ = z;
+	        	if (z > maxZ) maxZ = z;   
 	        	
 	        	int r = result.getInt("r");
 	        	int g = result.getInt("g");
 	        	int b = result.getInt("b");
 	        	Color color = new Color(r, g, b);
 				colorList.add(color);
+				
+				float data = result.getFloat("temperature");
+				dataList.add( data );
+				
 	        }
 						
 			if (coordinateList.size() == 0) {	
@@ -158,6 +167,7 @@ public class PostgreSqDBManager implements DBManager {
 			PntcQueryResult queryResult = new PntcQueryResult();
 			queryResult.setCoordinateList(coordinateList);
 			queryResult.setColorList(colorList);
+			queryResult.setDataList( dataList );
 			return queryResult;
 		}
 		else
@@ -197,7 +207,32 @@ public class PostgreSqDBManager implements DBManager {
 
 	@Override
 	public void importIntoDatabase(List<PointObject> pointList) throws SQLException {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
+		try {	
+			String insertSql = "insert into point_table(jobid,x,y,z,r,g,b,temperature) values(?,?,?,?,?,?,?,?);";
+			ps = this.connection.prepareStatement( insertSql );			
+			Iterator<PointObject> iter = pointList.iterator();
+			while (iter.hasNext()) {
+				PointObject pointObject = iter.next();
+				ps.setString(1, pointObject.getJobId() );
+				ps.setDouble(2, pointObject.getX());
+				ps.setDouble(3, pointObject.getY());
+				ps.setDouble(4, pointObject.getZ());
+				ps.setInt(5, pointObject.getR());
+				ps.setInt(6, pointObject.getG());
+				ps.setInt(7, pointObject.getB());
+				ps.setDouble(8, 12);
+				ps.addBatch();
+			}
+			ps.executeBatch();			
+		} catch (SQLException e) {
+			throw new SQLException("Faild to insert data into database.", e);
+		} finally {
+			if (ps != null)
+				ps.close();
+		}		
+		
+		
 		
 	}
 

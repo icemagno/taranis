@@ -33,6 +33,7 @@ public class PntcQueryResult {
 	
 	private List<Coordinate> coordinateList;
 	private List<Color> colorList;
+	private List<Float> dataList;
 	
 	public List<Coordinate> getCoordinateList() {
 		return coordinateList;
@@ -49,4 +50,14 @@ public class PntcQueryResult {
 	public void setColorList(List<Color> colorList) {
 		this.colorList = colorList;
 	}
+
+	public List<Float> getDataList() {
+		return dataList;
+	}
+
+	public void setDataList(List<Float> dataList) {
+		this.dataList = dataList;
+	}
+
+	
 }

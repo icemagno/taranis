@@ -35,20 +35,21 @@ public class BoundingBox2D {
 		this.minX = minX;
 		this.maxY = maxY;
 		this.maxX = maxX;
+		System.out.println("New BBOX as (" + this.minY + "," + this.minX + " " + maxY + "," + this.maxX + ")" );
 	}
 
 	public BoundingBox2D[][] tileBoundingbox(double tileSize) {
 		int colnum = (int) ((maxX - minX) / tileSize) + 1;
 		int rownum = (int) ((maxY - minY) / tileSize) + 1;
-
+		System.out.println("Global bounding box: cols=" + colnum + " rows="+rownum);
 		return tileBoundingbox(rownum, colnum);
 	}
 	
 	public BoundingBox2D[][] tileBoundingbox(int rownum, int colnum) {
-
 		double tileSizeX = (maxX - minX) / colnum;
 		double tileSizeY = (maxY - minY) / rownum;
-				
+		System.out.println("Tile size X: " + tileSizeX );
+		System.out.println("Tile size Y: " + tileSizeY );
 		BoundingBox2D[][] tileBoundingVolumes = new BoundingBox2D[rownum][colnum];
 		for (int i = 0; i < colnum; i++) {
 			for (int j = 0; j < rownum; j++) {

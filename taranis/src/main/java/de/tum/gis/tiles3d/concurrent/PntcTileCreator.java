@@ -77,6 +77,7 @@ public class PntcTileCreator extends DefaultWorkerImpl<PntcTileWork>{
 		
 		List<Coordinate> coordinateList = queryResult.getCoordinateList();
 		List<Color> colorList = queryResult.getColorList();
+		List<Float> dataList = queryResult.getDataList();
 
 		// calculate origin and relative coordinates
 		int pointNumber = coordinateList.size();		
@@ -117,13 +118,14 @@ public class PntcTileCreator extends DefaultWorkerImpl<PntcTileWork>{
 		byte[] positionByte = CharacterConverter.convertToByteArray(coordinateArray);
 
 		// --------------------------------------------------------------------------------------------
-		// Generate temperature attribute array and store in a Batch table binary 
-		byte[] batchTableBinary = new byte[pointNumber];
+		// Generate binary attribute array and store in a Batch table binary 
+		float[] batchTableBinary = new float[pointNumber];
+		
 		for (int i = 0; i < pointNumber; i++) {
-			batchTableBinary[i] = (byte)getRandomNumber(0.0, 250.0);
+			batchTableBinary[i] = dataList.get(i);
 		}
 		// Convert the Batch table binary data to byte array
-		byte[] batchTableBinaryByte = batchTableBinary; //CharacterConverter.convertToByteArray(batchTableBinary);
+		byte[] batchTableBinaryByte = CharacterConverter.convertToByteArray(batchTableBinary);
 		// --------------------------------------------------------------------------------------------
 		
 		// Take the Feature table JSON header 
@@ -202,15 +204,12 @@ public class PntcTileCreator extends DefaultWorkerImpl<PntcTileWork>{
 		writeBinaryFile(outputByte, pntsFilepath);
 	}
 	
-	private double getRandomNumber(double min, double max) {
-	    return ( ( Math.random() * (max - min) ) + min );
-	}	
-	
+
 	private String generateBatchTableJSON( int spaceNumber ) throws IOException {
 		StringBuilder sb= new StringBuilder();
 		
-		sb.append("{\"temperature\":").append("{\"byteOffset\":").append(0).append(",");
-		sb.append("\"componentType\":").append("\"BYTE\"").append(",");
+		sb.append("{\"altitude\":").append("{\"byteOffset\":").append(0).append(",");
+		sb.append("\"componentType\":").append("\"FLOAT\"").append(",");
 		sb.append("\"type\":").append("\"SCALAR\"").append("}}");
 		
 		for (int i = 1; i <= spaceNumber; i++) {

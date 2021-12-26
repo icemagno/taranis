@@ -38,6 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.citydb.api.concurrent.PoolSizeAdaptationStrategy;
 import org.citydb.api.concurrent.WorkerPool;
+import org.geotools.geometry.DirectPosition2D;
 import org.geotools.referencing.CRS;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -116,8 +117,7 @@ public class PntcGenerator {
 
 		TileSet tileset = new TileSet();
 		try {
-			if (!shouldRun)
-				return false;
+			if (!shouldRun)	return false;
 			Logger.info("Generating output file structure according to the Cesium's 3D-Tiles standard");
 			double tileSize = config.getTileSize();			
 			tileset = generateTileset(globalBoundingbox, outputFolderPath, tileSize);
@@ -183,7 +183,7 @@ public class PntcGenerator {
 		tileCreatorPool.addWork(new PntcTileWork((PointCloudModel) rootTile.getContent()));
 	}
 	
-	/*
+	
 	private DirectPosition2D reproject( double x, double y ) {
 		DirectPosition2D destDirectPosition2D = new DirectPosition2D();
 		try {
@@ -194,9 +194,9 @@ public class PntcGenerator {
 		}
 		return destDirectPosition2D;
 	}
-	*/
 	
-	private void readSourcePointData() throws IOException, SQLException {
+	
+	public void readSourcePointData() throws IOException, SQLException {
 		File dataFolder = new File(config.getInputPath());
 		File[] fileList = dataFolder.listFiles();
 		int numberOfFiles = fileList.length;	
@@ -218,13 +218,13 @@ public class PntcGenerator {
 					double y = Double.valueOf(valueArray[1]);
 					double z = (Double.valueOf(valueArray[2]) + config.getzOffset()) * config.getZScaleFactor();
 					
-					/*
+					
 					if( config.getMustReproject() ) {
 						DirectPosition2D destDirectPosition2D = reproject( x, y );
 					    x = destDirectPosition2D.x;
 					    y = destDirectPosition2D.y;
 					}
-					*/
+					
 					
 					if (Double.valueOf(valueArray[2]) < minZ) minZ = Double.valueOf(valueArray[2]);
 					
@@ -235,7 +235,7 @@ public class PntcGenerator {
 					int g = Integer.valueOf(valueArray[4]) / colorScaleFactor;
 					int b = Integer.valueOf(valueArray[5]) / colorScaleFactor;	
 					
-					batchPointList.add( new PointObject(x, y, z, r, g, b, config.getSrid() ) );
+					batchPointList.add( new PointObject(x, y, z, r, g, b, config.getSrid(), config.getJobId() ) );
 					
 					if (batchPointList.size() % PostgreSqDBManager.batchInsertionSize == 0) {
 						dbManager.importIntoDatabase(batchPointList);
@@ -276,6 +276,9 @@ public class PntcGenerator {
 		int rowNumber = tileBoundingboxes.length;
 		int colNumber = tileBoundingboxes[0].length;
 		int numberOfTiles = rowNumber * colNumber;	
+		
+		System.out.println("Rows: " + rowNumber + " Cols: " + colNumber + " Number of tiles: " + numberOfTiles );
+
 		
 		int maximumNumberOfChildrenTiles = 2;
 		boolean createTileset = false;
@@ -333,7 +336,7 @@ public class PntcGenerator {
 		PointCloudModel rootPointCloudModel = objectFactory.createPointCloudModel();	
 		rootPointCloudModel.setPath(outputFolderPath + File.separator + "root.pnts");
 		rootPointCloudModel.setOwnerTileBoundingBox(globalBoundingbox);
-		rootPointCloudModel.setMaximumNumberOfPoints(config.getMaxNumOfPointsPerTile());
+		rootPointCloudModel.setMaximumNumberOfPoints( config.getMaxNumOfPointsPerTile() );
 		rootTile.setContent(rootPointCloudModel);
 		rootTile.setContentUrl("root.pnts");
 		

@@ -25,6 +25,7 @@
 package de.tum.gis.tiles3d.model;
 
 public class PointObject {
+	private String jobId;
 	private double x;
 	private double y;
 	private double z;
@@ -33,13 +34,14 @@ public class PointObject {
 	int b;
 	String srid;
 	
-	public PointObject(double x, double y, double z, int r, int g, int b, String srid) {
+	public PointObject(double x, double y, double z, int r, int g, int b, String srid, String jobId ) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.r = r;
 		this.g = g;
 		this.b = b;
+		this.jobId = jobId;
 		this.srid = srid;
 	}
 
@@ -98,4 +100,14 @@ public class PointObject {
 	public void setSrid(String srid) {
 		this.srid = srid;
 	}
+
+	public String getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
+	
+	
 }

@@ -12,18 +12,33 @@ import br.mil.defesa.sisgeodef.services.PointService;
 @RestController
 public class PointController {
 	
+	// tileSize = Tamanho quadrado do ladrilho na distância da unidade de medida da projeção usada.
+	// Para EPSG:4326 usar 0.15 graus
+	// Para EPSG:2994 usar 100 metros
+	
+	// http://localhost:36700/populatedbz?jobid=2016-04-18-23-07-24&datahora=2016-04-18 23:07:24&selector=dbz
+	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-23-07-24&maxpoints=5000&tilesize=0.15&srid=4326
+	
+	// http://localhost:36700/populatedbz?jobid=2016-04-18-22-55-27&datahora=2016-04-18 22:55:27&selector=dbz
+	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-22-55-27&maxpoints=5000&tilesize=0.15&srid=4326
+	
 	@Autowired
 	private PointService ptService;
 	
 	@RequestMapping( value = "/populatedbz", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
-    public String populateDbz( @RequestParam(value="jobid",required=true) String jobId ) {
-		ptService.populatePointTableWithDBZ(jobId);
+    public String populateDbz( @RequestParam(value="jobid",required=true) String jobId,
+    		@RequestParam(value="datahora",required=true) String datahora,
+    		@RequestParam(value="selector",required=true) String selector ) {
+		ptService.populatePointTableFromRadarData(jobId, datahora, selector);
 		return "ok";
     }	
 
 	@RequestMapping( value = "/generatepointcloud", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
-    public String generatePointCloud( @RequestParam(value="jobid",required=true) String jobId ) {
-		ptService.readSourcePointData(jobId);
+    public String generatePointCloud( @RequestParam(value="jobid",required=true) String jobId,
+    		@RequestParam(value="srid",required=true) String srid,
+    		@RequestParam(value="maxpoints",required=true) Integer maxPointsPerTile,
+    		@RequestParam(value="tilesize",required=true) Double tileSize ) {
+		ptService.readSourcePointData(jobId, maxPointsPerTile, tileSize, srid );
 		return "ok";
     }	
 	
@@ -31,5 +46,17 @@ public class PointController {
 	@RequestMapping( value = "/jobstatus", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
     public String status( @RequestParam(value="jobid",required=true) String jobId ) {
 		return ptService.getStatus(jobId);
-    }	    
+    }
+	
+	@RequestMapping( value = "/generatefromfile", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
+    public String populateFromFile( @RequestParam(value="jobid",required=true) String jobId,
+    		@RequestParam(value="srid",required=true) String srid,
+    		@RequestParam(value="maxpoints",required=true) Integer maxPointsPerTile,
+    		@RequestParam(value="tilesize",required=true) Double tileSize ) {
+		ptService.populatePointTableFromFile(jobId, maxPointsPerTile, tileSize, srid);
+		return "ok";
+    }	
+	
+	
+	
 }

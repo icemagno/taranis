@@ -1,8 +1,6 @@
 #! /bin/sh
 
-docker ps -a | awk '{ print $1,$2 }' | grep magnoabreu/taranis-db:1.0 | awk '{print $1 }' | xargs -I {} docker rm -f {}
-docker rmi magnoabreu/taranis-db:1.0
-docker build --tag=magnoabreu/taranis-db:1.0 --rm=true .
+
 
 docker run --name taranis-db --hostname=taranis-db \
 -e POSTGRES_USER=postgres \
@@ -13,7 +11,7 @@ docker run --name taranis-db --hostname=taranis-db \
 -p 36701:5432 \
 -e POSTGRES_MULTIPLE_EXTENSIONS=postgis,hstore,postgis_topology \
 -v /srv/taranis-db/:/var/lib/postgresql/ \
--d magnoabreu/taranis-db:1.0
+-d kartoza/postgis:12.0
 
 #docker exec -it taranis-db pg_restore -U postgres -h localhost -W -d taranis /opt/taranis-db/taranis.tar
 
