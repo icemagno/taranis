@@ -17,10 +17,10 @@ public class PointController {
 	// Para EPSG:2994 usar 100 metros
 	
 	// http://localhost:36700/populatedbz?jobid=2016-04-18-23-07-24&datahora=2016-04-18 23:07:24&selector=dbz
-	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-23-07-24&maxpoints=5000&tilesize=0.15&srid=4326
+	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-23-07-24&maxpoints=500000&tilesize=0.50&srid=4326
 	
 	// http://localhost:36700/populatedbz?jobid=2016-04-18-22-55-27&datahora=2016-04-18 22:55:27&selector=dbz
-	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-22-55-27&maxpoints=5000&tilesize=0.15&srid=4326
+	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-22-55-27&maxpoints=500000&tilesize=0.50&srid=4326
 	
 	@Autowired
 	private PointService ptService;
