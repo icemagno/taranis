@@ -38,7 +38,10 @@ public class PointService {
 	private String userPassword;		
 
 	@Value("${taranis.sourcepath}")
-	private String sourcePath;	
+	private String sourcePath;
+	
+	@Value("${taranis.refinamentModel}")
+	private String refinamentModel;	
 
 	@Value("${taranis.outputpath}")
 	private String outputPath;	
@@ -52,14 +55,18 @@ public class PointService {
 		if( !outputPath.endsWith("/") ) outputPath = outputPath + "/";
 	}
 
-	public void readSourcePointData( String jobId, int maxPointsPerTile, double tileSize, String srid ) {
+	public void readSourcePointData( String jobId, int maxPointsPerTile, double tileSize, String srid, double geometricErrorRatio ) {
 
+		Refine refinamentModel = Refine.ADD;
+		if( this.refinamentModel.toUpperCase().equals("REPLACE") ) refinamentModel = Refine.REPLACE;
+		
 		Boolean isRunning = runningJobs.get( jobId );
 		if ( isRunning != null && isRunning ) {
 			logger.info( "Job " + jobId + " already running." );
 			return;
 		}
 		logger.info( "Job " + jobId + " start." );
+		logger.info("Refinament " + refinamentModel.toString() );
 		
 		PntcConfig config = new PntcConfig();		
 		config.setInputPath( sourcePath + jobId ) ;
@@ -72,12 +79,13 @@ public class PointService {
 		config.setTileSize( tileSize );
 		config.setMaxNumOfPointsPerTile( maxPointsPerTile );
 		config.setOutputFolderPath( outputPath + jobId );
-		config.setRefinamentModel( Refine.ADD );
+		config.setRefinamentModel( refinamentModel );
 		config.setzOffset( 0 );
 		config.setConnectionString(connectionString);
 		config.setUserName(userName);
 		config.setUserPassword(userPassword);
 		config.setJobId( jobId );
+		config.setGeometricErrorRatio( geometricErrorRatio );
 		
 		logger.info( "Tile size: " + tileSize );
 		logger.info( "Max Points per Tile: " + maxPointsPerTile );
@@ -119,9 +127,10 @@ public class PointService {
 		}		
 	}
 
-	private void generateCloudFromFile( PostgreSqlDBManagerFactory dbManagerFactory, PntcConfig config ) {
+	private void generateCloudFromFile( PostgreSqlDBManagerFactory dbManagerFactory, PntcConfig config, double geometricErrorRatio ) {
 		boolean success = false;
 		try {
+			config.setGeometricErrorRatio(geometricErrorRatio);
 			PntcGenerator generator = new PntcGenerator(config, dbManagerFactory);
 			generator.readSourcePointData();
 			success = generator.doProcess();
@@ -151,7 +160,7 @@ public class PointService {
 				+ "r integer, "
 				+ "g integer, "
 				+ "b integer,"
-				+ "temperature integer )";
+				+ "altitude integer )";
 		try {
 			Connection sqlConnection  =  DriverManager.getConnection(connectionString, userName, userPassword);
 			PreparedStatement ps = sqlConnection.prepareStatement( createTableCommand ); 
@@ -233,7 +242,7 @@ public class PointService {
 		    			if ( val > 0.0 ) {
 		    				int height = Integer.valueOf( name.substring(4) );
 		    				Point pt = new Point( lat, lon, height, val, dbzRamp.getColorAsColor(val) );
-		    				String insertSql = "insert into point_table(jobid,x,y,z,r,g,b,temperature) values(?,?,?,?,?,?,?,?);";
+		    				String insertSql = "insert into point_table(jobid,x,y,z,r,g,b,altitude) values(?,?,?,?,?,?,?,?);";
 		    				PreparedStatement insertPs = sqlConnection.prepareStatement( insertSql );
 		    				insertPs.setString(1, jobId);
 		    				insertPs.setDouble(2, lon);
@@ -303,7 +312,7 @@ public class PointService {
 		new Thread() {
 			@Override
 			public void run() {
-				generateCloudFromFile( dbManagerFactory, config );
+				generateCloudFromFile( dbManagerFactory, config, 0.02 );
 				notifyWhenDone( jobId );
 			}
 		}.start();		

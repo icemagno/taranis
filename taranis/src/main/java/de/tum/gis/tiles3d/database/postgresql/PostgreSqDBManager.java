@@ -138,7 +138,7 @@ public class PostgreSqDBManager implements DBManager {
 	        	Color color = new Color(r, g, b);
 				colorList.add(color);
 				
-				float data = result.getFloat("temperature");
+				float data = result.getFloat("altitude");
 				dataList.add( data );
 				
 	        }
@@ -209,7 +209,7 @@ public class PostgreSqDBManager implements DBManager {
 	public void importIntoDatabase(List<PointObject> pointList) throws SQLException {
 		PreparedStatement ps = null;
 		try {	
-			String insertSql = "insert into point_table(jobid,x,y,z,r,g,b,temperature) values(?,?,?,?,?,?,?,?);";
+			String insertSql = "insert into point_table(jobid,x,y,z,r,g,b,altitude) values(?,?,?,?,?,?,?,?);";
 			ps = this.connection.prepareStatement( insertSql );			
 			Iterator<PointObject> iter = pointList.iterator();
 			while (iter.hasNext()) {
@@ -221,7 +221,7 @@ public class PostgreSqDBManager implements DBManager {
 				ps.setInt(5, pointObject.getR());
 				ps.setInt(6, pointObject.getG());
 				ps.setInt(7, pointObject.getB());
-				ps.setDouble(8, 12);
+				ps.setDouble(8, pointObject.getZ() );
 				ps.addBatch();
 			}
 			ps.executeBatch();			

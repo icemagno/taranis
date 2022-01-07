@@ -72,7 +72,7 @@ public class PntcGenerator {
 	final static String ENCODING = "UTF-8";
 	final static Charset CHARSET = Charset.forName(ENCODING);
 	final static String tilesFolderName = "Tiles";	
-	final static double GeometricErrorRatio = 0.02;
+	private double geometricErrorRatio = 1;
 	
 	private volatile boolean shouldRun = true;
 	private AtomicInteger totalNumberOfTiles;			
@@ -84,6 +84,7 @@ public class PntcGenerator {
 	private MathTransform mathTransform;
 	
 	public PntcGenerator(PntcConfig config, DBManagerFactory dbManagerFactory) throws Exception {
+		this.geometricErrorRatio = config.getGeometricErrorRatio();
 		this.config = config;
 		dbManager = dbManagerFactory.createDBManager();
 		
@@ -319,7 +320,7 @@ public class PntcGenerator {
 
 					tile.setContent(pointCloudModel);
 					tile.setContentUrl(contentUrl);
-					tile.setGeometricError(config.getTileSize() * GeometricErrorRatio);
+					tile.setGeometricError( config.getTileSize() * this.geometricErrorRatio );
 		    	}
 				tile.setRefine( config.getRefinamentModel() );				
 				

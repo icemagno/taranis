@@ -68,7 +68,7 @@
 		11000,12000,13000,14000,15000,16000,17000,18000,19000];
 	let index = 0;
 	let theStyle = {
-		pointSize : 3.0,
+		pointSize : 2.0,
 	}
 
 	// ========================================================
@@ -100,15 +100,25 @@
 	window.setTimeout(function() {
 		tileset1.show = false;
 		
+		/*
 		window.setInterval(function() {
 			tileset2.show = !tileset2.show;
 			tileset1.show = !tileset1.show;
 		}, 2000);
+		*/
 		
-	},13000 );
+		let x = 0;
+		window.setInterval(function() {
+			if( x < radarHeights.length ) x++;
+			setLevel( 0, x );
+			if( x >= radarHeights.length ) x = 0;
+		}, 20);
+		
+		
+	},10000 );
 	
 	viewer.zoomTo(tileset1, new Cesium.HeadingPitchRange(0.0, -90.0, 350000.0));
-	setLevel( 16, 18 );
+	setLevel( 0, 0 );
 
 	function setLevel( levelStartIndex, levelEndIndex ){
 		if ( levelStartIndex > levelEndIndex ) levelStartIndex = levelEndIndex -1;

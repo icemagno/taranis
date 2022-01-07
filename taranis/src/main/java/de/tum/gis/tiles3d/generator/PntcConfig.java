@@ -40,6 +40,7 @@ public class PntcConfig {
 	private String targetSrid;
 	private boolean mustReproject;
 	private String jobId;
+	private double geometricErrorRatio;
 	
 	private String connectionString;
 	private String userName;
@@ -171,6 +172,14 @@ public class PntcConfig {
 
 	public void setJobId(String jobId) {
 		this.jobId = jobId;
+	}
+
+	public double getGeometricErrorRatio() {
+		return geometricErrorRatio;
+	}
+
+	public void setGeometricErrorRatio(double geometricErrorRatio) {
+		this.geometricErrorRatio = geometricErrorRatio;
 	}
 
 	

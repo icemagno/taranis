@@ -16,16 +16,16 @@ public class PointController {
 	// Para EPSG:4326 usar 0.15 graus
 	// Para EPSG:2994 usar 100 metros
 	
-	// http://localhost:36700/populatedbz?jobid=2016-04-18-23-07-24&datahora=2016-04-18 23:07:24&selector=dbz
-	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-23-07-24&maxpoints=500000&tilesize=0.50&srid=4326
-	
-	// http://localhost:36700/populatedbz?jobid=2016-04-18-22-55-27&datahora=2016-04-18 22:55:27&selector=dbz
-	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-22-55-27&maxpoints=500000&tilesize=0.50&srid=4326
+	// http://localhost:36700/populate?jobid=2016-04-18-23-07-24&datahora=2016-04-18 23:07:24&selector=dbz
+	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-23-07-24&maxpoints=250000&tilesize=0.30&srid=4326&geratio=1
+		   
+	// http://localhost:36700/populate?jobid=2016-04-18-22-55-27&datahora=2016-04-18 22:55:27&selector=dbz
+	// http://localhost:36700/generatepointcloud?jobid=2016-04-18-22-55-27&maxpoints=250000&tilesize=0.30&srid=4326&geratio=1
 	
 	@Autowired
 	private PointService ptService;
 	
-	@RequestMapping( value = "/populatedbz", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
+	@RequestMapping( value = "/populate", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
     public String populateDbz( @RequestParam(value="jobid",required=true) String jobId,
     		@RequestParam(value="datahora",required=true) String datahora,
     		@RequestParam(value="selector",required=true) String selector ) {
@@ -37,8 +37,9 @@ public class PointController {
     public String generatePointCloud( @RequestParam(value="jobid",required=true) String jobId,
     		@RequestParam(value="srid",required=true) String srid,
     		@RequestParam(value="maxpoints",required=true) Integer maxPointsPerTile,
-    		@RequestParam(value="tilesize",required=true) Double tileSize ) {
-		ptService.readSourcePointData(jobId, maxPointsPerTile, tileSize, srid );
+    		@RequestParam(value="tilesize",required=true) Double tileSize,
+    		@RequestParam(value="geratio",required=true) Double geometricErrorRatio) {
+		ptService.readSourcePointData(jobId, maxPointsPerTile, tileSize, srid, geometricErrorRatio );
 		return "ok";
     }	
 	
