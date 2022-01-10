@@ -14,6 +14,5 @@ docker run --name taranis --hostname=taranis \
 	-v /srv/pointgen/:/pointgen/ \
 	-d magnoabreu/taranis:1.0	
 
-docker network connect sisgeodef taranis
-docker network connect apolo taranis
+
 
