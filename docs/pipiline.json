@@ -1,0 +1,17 @@
+[
+	{
+		"type":"readers.las",
+		"filename":"sp.laz"
+	},
+	{
+		"type":"filters.chipper",
+		"capacity":400
+	},	
+	{
+		"type":"writers.pgpointcloud",
+		"connection":"host='taranis-db' dbname='taranis' user='postgres' password='admin'",
+		"table":"sp-laz",
+		"compression":"dimensional",
+		"srid":"4326"
+	}
+]

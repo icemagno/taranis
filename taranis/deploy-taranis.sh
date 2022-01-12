@@ -8,7 +8,7 @@ docker rmi magnoabreu/taranis:1.0
 
 docker build --tag=magnoabreu/taranis:1.0 --rm=true .
 
-docker run --name taranis --hostname=taranis \
+docker run --name taranis --network=interna --hostname=taranis \
 	-v /etc/localtime:/etc/localtime:ro \
 	-p 36700:36700 \
 	-v /srv/pointgen/:/pointgen/ \
