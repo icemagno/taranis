@@ -1,0 +1,4 @@
+      tileset.style = new Cesium.Cesium3DTileStyle({
+        pointSize :  '3 - (${COLOR}.Red * 10 )',
+        //show : '${COLOR}.Red < 0.1 && ${COLOR}.Red > 0.0'
+      });  
