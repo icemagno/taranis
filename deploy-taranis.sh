@@ -9,12 +9,11 @@ docker rmi magnoabreu/taranis:1.0
 
 docker build --tag=magnoabreu/taranis:1.0 --rm=true .
 
-docker run --name taranis --hostname=taranis \
+docker run --name taranis --network=sisgeodef --hostname=taranis \
 	-v /etc/localtime:/etc/localtime:ro \
 	-v /srv/taranis/:/taranis/ \
-	-p 36103:36103 \
+	-p 36700:36700 \
 	-d magnoabreu/taranis:1.0	
 
-docker network connect sisgeodef taranis
-docker network connect apolo taranis
+
 
