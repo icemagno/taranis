@@ -251,7 +251,7 @@ public class PointService {
 		    				insertPs.setDouble(5, pt.getColor().getRed() );
 		    				insertPs.setDouble(6, pt.getColor().getGreen() );
 		    				insertPs.setDouble(7, pt.getColor().getBlue() );
-		    				insertPs.setDouble(8, height );
+		    				insertPs.setDouble(8, val );
 		    				insertPs.executeUpdate();
 		    			}
 		    		}

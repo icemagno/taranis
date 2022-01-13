@@ -112,10 +112,6 @@ public class PostgreSqDBManager implements DBManager {
 		
 		try {	
 			stmt = connection.createStatement();
-			
-			// Magno
-			//stmt.setFetchSize(fetchSize);
-			
 			result = stmt.executeQuery(queryCommand);
 			
 			double minZ = Integer.MAX_VALUE;

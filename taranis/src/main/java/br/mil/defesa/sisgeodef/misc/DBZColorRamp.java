@@ -24,12 +24,58 @@ import java.util.TreeMap;
 		70	80	#d3d3d3	
 */	
 
-
+/*
+-40     -25     #ccffcc
+-25     -20     #cc99cc
+-20     -15     #996699
+-15     -10     #663366
+-10     -5      #cccc99
+-5      0       #999966
+0       5       #666633
+5       10      #66ffff
+10      15      #3399ff
+15      20      #0000ff
+20      25      #00ff00
+25      30      #00cc00
+30      35      #009900
+35      40      #ffff00
+40      45      #ffcc00
+45      50      #ff6600
+50      55      #ff0000
+55      60      #cc3300
+60      65      #990000
+65      70      #ff00ff
+70      75      #9933cc
+75      100     #ffffff
+*/		
 public class DBZColorRamp {
 	private NavigableMap<Double, String> colorRamp;
 	
 	public DBZColorRamp() {
 		colorRamp = new TreeMap<Double, String>();
+		colorRamp.put(-40.0,"#ccffcc");
+		colorRamp.put(-25.0,"#cc99cc");
+		colorRamp.put(-20.0,"#996699");
+		colorRamp.put(-15.0,"#663366");
+		colorRamp.put(-10.0,"#cccc99");
+		colorRamp.put(-5.0,"#999966");
+		colorRamp.put(0.0,"#666633");
+		colorRamp.put(5.0,"#66ffff");
+		colorRamp.put(10.0,"#3399ff");
+		colorRamp.put(15.0,"#0000ff");
+		colorRamp.put(20.0,"#00ff00");
+		colorRamp.put(25.0,"#00cc00");
+		colorRamp.put(30.0,"#009900");
+		colorRamp.put(35.0,"#ffff00");
+		colorRamp.put(40.0,"#ffcc00");
+		colorRamp.put(45.0,"#ff6600");
+		colorRamp.put(50.0,"#ff0000");
+		colorRamp.put(55.0,"#cc3300");
+		colorRamp.put(60.0,"#990000");
+		colorRamp.put(65.0,"#ff00ff");
+		colorRamp.put(70.0,"#9933cc");
+		colorRamp.put(75.0,"#ffffff");
+		/*
 		colorRamp.put(-20.0,"#404040");
 		colorRamp.put(5.0,  "#483d8b");
 		colorRamp.put(10.0, "#005a00");
@@ -47,6 +93,7 @@ public class DBZColorRamp {
 		colorRamp.put(60.0, "#fd341c");
 		colorRamp.put(65.0, "#808080");
 		colorRamp.put(70.0, "#d3d3d3");
+		*/
 	}
 	
 	public String getColor( double value ) {

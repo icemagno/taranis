@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>Cesium Branco</title>
+    <link href="Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="Cesium/Cesium.js"></script>
+    <script src="jquery.js"></script>
+
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;background-color: #000000;
+        }
+        input[type=text]{
+            width: 30px;
+            height: 10px;
+        }
+        input[type=range] {
+            width: 170px;
+        }
+    </style>
+</head>
+<body>
+<div style="position:relative" id="cesiumContainer"></div>
+<script type="text/javascript">
+
+	var baseOsmProvider = new Cesium.OpenStreetMapImageryProvider({
+		url : 'https://a.tile.openstreetmap.org/'
+	});				
+	
+	var viewer = new Cesium.Viewer('cesiumContainer',{
+		imageryProvider: baseOsmProvider,
+		timeline: false,
+		skyAtmosphere: false,
+		animation: false,
+		fullscreenButton : false,
+		
+		geocoder : false,
+		homeButton : false,
+		infoBox : false,
+		skyBox : false,
+		selectionIndicator : false,
+		navigationHelpButton : false,
+		shouldAnimate : false,
+	});
+	//viewer.extend(Cesium.viewerCesium3DTilesInspectorMixin);
+	var scene = viewer.scene;
+	var layers = scene.imageryLayers;
+
+	scene.globe.depthTestAgainstTerrain = true;
+	scene.highDynamicRange = false;
+	scene.globe.enableLighting = false;
+	scene.globe.baseColor = Cesium.Color.WHITE;
+	scene.screenSpaceCameraController.enableLook = false;
+	scene.screenSpaceCameraController.enableCollisionDetection = true;
+	scene.screenSpaceCameraController.inertiaZoom = 0;
+	scene.screenSpaceCameraController.inertiaTranslate = 0;
+	scene.screenSpaceCameraController.inertiaSpin = 0;
+	//scene.globe.maximumScreenSpaceError = 1;
+
+		
+	/*********************************   **********************************************/
+	let theStyle = {
+        // pointSize :  '3 - (${COLOR}.Red * 10 )', // <<<-- Yes! I have a size change
+        // show : '${COLOR}.Red < 0.5 && ${COLOR}.Red > 0.1'	 <<<-- Just testing to find a working value!
+		pointSize: 2.7,
+		show: '${altitude} > 10'
+	}
+
+	// ========================================================
+	var tileset1 = new Cesium.Cesium3DTileset({
+		url: 'pointdata/2016-04-18-22-55-27/tileset.json',
+		skipLevelOfDetail : false,
+		style : new Cesium.Cesium3DTileStyle( theStyle )
+	});
+
+	tileset1.readyPromise.then(function(tileset) {
+		console.log("T1 Pronto");
+		tileset1._geometricError = 10000;
+	});
+
+	viewer.scene.primitives.add(tileset1);	
+	viewer.zoomTo(tileset1, new Cesium.HeadingPitchRange(0.0, -90.0, 350000.0));
+
+		
+</script>
+</body>
+</html>
