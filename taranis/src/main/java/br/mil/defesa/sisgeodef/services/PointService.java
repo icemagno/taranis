@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import br.mil.defesa.sisgeodef.hgt.HGTReader;
 import br.mil.defesa.sisgeodef.misc.DBZColorRamp;
 import br.mil.defesa.sisgeodef.misc.Point;
 import de.tum.gis.tiles3d.database.postgresql.PostgreSqlDBManagerFactory;
@@ -45,6 +46,9 @@ public class PointService {
 
 	@Value("${taranis.outputpath}")
 	private String outputPath;	
+
+	@Value("${taranis.hgtpath}")
+	private String hgtPath;	
 	
 	private DBZColorRamp dbzRamp = new DBZColorRamp();
 	private Map<String,Boolean> runningJobs = new HashMap<String,Boolean>();
@@ -316,6 +320,48 @@ public class PointService {
 				notifyWhenDone( jobId );
 			}
 		}.start();		
+	}
+
+	public void populatePointTableFromSRTM(String jobId) {
+		
+		
+		Boolean isRunning = runningJobs.get( jobId );
+		if ( isRunning != null && isRunning ) {
+			logger.info( "Job " + jobId + " already running." );
+			return;
+		}
+		logger.info( "Job " + jobId + " start." );
+		
+		PntcConfig config = new PntcConfig();		
+		config.setInputPath( sourcePath + jobId ) ;
+
+		config.setTargetSrid( "4326" );
+		config.setMustReproject( false );
+		config.setSeparatorCharacter( " " );
+		config.setColorBitSize( 16 );
+		config.setZScaleFactor( 0.1 );
+		config.setOutputFolderPath( outputPath + jobId );
+		config.setRefinamentModel( Refine.REPLACE );
+		config.setzOffset( 0 );
+		config.setConnectionString(connectionString);
+		config.setUserName(userName);
+		config.setUserPassword(userPassword);
+		config.setJobId( jobId );
+		
+		new File( config.getOutputFolderPath() ).mkdirs();
+		
+		emptyByJob( jobId );
+		
+		runningJobs.put( jobId, true );
+		new Thread() {
+			@Override
+			public void run() {
+				new HGTReader( jobId, config, hgtPath ).importData();
+				notifyWhenDone( jobId );
+			}
+		}.start();			
+		
+
 	}
 	
 	

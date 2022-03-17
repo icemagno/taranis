@@ -32,7 +32,9 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.citydb.api.concurrent.DefaultWorkerImpl;
+
 import com.vividsolutions.jts.geom.Coordinate;
 
 import de.tum.gis.tiles3d.database.DBManager;
@@ -71,7 +73,7 @@ public class PntcTileCreator extends DefaultWorkerImpl<PntcTileWork>{
 		PointCloudModel pntModel = work.getPntcModel();
 		String pntsFilepath = pntModel.getPath();
 		
-		// query point object information (XZY and RGB) from database
+		// query point object information (XZY and PointColor) from database
 		PntcQueryResult queryResult = dbManager.queryPointEntities(pntModel);
 		if (queryResult == null) return;
 		
@@ -113,6 +115,7 @@ public class PntcTileCreator extends DefaultWorkerImpl<PntcTileWork>{
 			colorArray[3 * i] = (byte) colorList.get(i).getRed();
 			colorArray[3 * i + 1] = (byte) colorList.get(i).getGreen();
 			colorArray[3 * i + 2] = (byte) colorList.get(i).getBlue();
+			
 		}
 		
 		byte[] positionByte = CharacterConverter.convertToByteArray(coordinateArray);
@@ -231,7 +234,7 @@ public class PntcTileCreator extends DefaultWorkerImpl<PntcTileWork>{
 		sb.append("\"RTC_CENTER\":[").append(origin.x);
 		sb.append(",").append(origin.y).append(",").append(origin.z).append("],");
 		sb.append("\"POSITION\":").append("{\"byteOffset\":").append(0).append("},");
-		sb.append("\"RGB\":").append("{\"byteOffset\":").append(pointNumber*12).append("}}");
+		sb.append("\"PointColor\":").append("{\"byteOffset\":").append(pointNumber*12).append("}}");
 		
 		for (int i = 1; i <= spaceNumber; i++) {
 			sb.append(" ");

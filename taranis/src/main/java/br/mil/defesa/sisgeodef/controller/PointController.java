@@ -24,15 +24,8 @@ public class PointController {
 	
 	@Autowired
 	private PointService ptService;
-	
-	@RequestMapping( value = "/populate", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
-    public String populateDbz( @RequestParam(value="jobid",required=true) String jobId,
-    		@RequestParam(value="datahora",required=true) String datahora,
-    		@RequestParam(value="selector",required=true) String selector ) {
-		ptService.populatePointTableFromRadarData(jobId, datahora, selector);
-		return "ok";
-    }	
 
+	// Will read database ( JobID ) and generate the Cesium3D Point Cloud
 	@RequestMapping( value = "/generatepointcloud", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
     public String generatePointCloud( @RequestParam(value="jobid",required=true) String jobId,
     		@RequestParam(value="srid",required=true) String srid,
@@ -42,14 +35,22 @@ public class PointController {
 		ptService.readSourcePointData(jobId, maxPointsPerTile, tileSize, srid, geometricErrorRatio );
 		return "ok";
     }	
+	// *************************************************************************************************************
+	/*
+				FROM HERE: Different ways to read data to database
+	*/
+	// *************************************************************************************************************
 	
 	
-	@RequestMapping( value = "/jobstatus", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
-    public String status( @RequestParam(value="jobid",required=true) String jobId ) {
-		return ptService.getStatus(jobId);
-    }
-	
-	@RequestMapping( value = "/generatefromfile", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
+	@RequestMapping( value = "/importfromdbz", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
+    public String populateFromDbz( @RequestParam(value="jobid",required=true) String jobId,
+    		@RequestParam(value="datahora",required=true) String datahora,
+    		@RequestParam(value="selector",required=true) String selector ) {
+		ptService.populatePointTableFromRadarData(jobId, datahora, selector);
+		return "ok";
+    }	
+
+	@RequestMapping( value = "/importfromfile", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
     public String populateFromFile( @RequestParam(value="jobid",required=true) String jobId,
     		@RequestParam(value="srid",required=true) String srid,
     		@RequestParam(value="maxpoints",required=true) Integer maxPointsPerTile,
@@ -57,7 +58,22 @@ public class PointController {
 		ptService.populatePointTableFromFile(jobId, maxPointsPerTile, tileSize, srid);
 		return "ok";
     }	
+
+	@RequestMapping( value = "/importfromsrtm", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
+    public String populateFromSRTM( @RequestParam(value="jobid",required=true) String jobId ) {
+		ptService.populatePointTableFromSRTM(jobId);
+		return "ok";
+    }	
 	
+	
+	// *************************************************************************************************************
+	// MISC 
+	// *************************************************************************************************************
+	
+	@RequestMapping( value = "/jobstatus", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
+    public String status( @RequestParam(value="jobid",required=true) String jobId ) {
+		return ptService.getStatus(jobId);
+    }
 	
 	
 }
