@@ -1,5 +1,8 @@
 package br.mil.defesa.sisgeodef.hgt;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -136,13 +139,23 @@ public class HGTReader {
 	private void processHgt( Tile tile ) throws Exception {
 		String hgtName = this.path + "/" + tile.getTileName();
 		String imageName = this.path + "/" + tile.getImageName();
+		String imageReferenceName = this.path + "/" + tile.getName() + "_ref.png";
+		
 		ShortBuffer data = readHgtFile( hgtName );
 		
 		logger.info("Processing " + tile.getName() + "...");
 		
 		Connection sqlConnection  =  DriverManager.getConnection( this.config.getConnectionString(), this.config.getUserName(), this.config.getUserPassword() );
 		
-        BufferedImage image = ImageIO.read( new File( imageName ) );		
+        BufferedImage image = ImageIO.read( new File( imageName ) );
+        
+        // Salva uma copia da imagem de referencia
+    	BufferedImage bufferedImage = new BufferedImage( Tile.HGT_ROW_LENGTH, Tile.HGT_ROW_LENGTH, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2d = bufferedImage.createGraphics();
+		g2d.setComposite(AlphaComposite.Clear);
+		g2d.fillRect(0, 0, Tile.HGT_ROW_LENGTH, Tile.HGT_ROW_LENGTH);		
+		g2d.setComposite(AlphaComposite.Src);		
+		// ------------------------------------------------------------
 		
 		for( int col = 0; col < Tile.HGT_ROW_LENGTH; col++  ) {
 			logger.info("Column " + col );
@@ -150,12 +163,15 @@ public class HGTReader {
     			int cell = ( Tile.HGT_ROW_LENGTH * (row)) + col;
     			short ele = data.get(cell);
     			
-    	        int clr = image.getRGB(row, col);
-    	        int red =   (clr & 0x00ff0000) >> 16;
-    	        int green = (clr & 0x0000ff00) >> 8;
-    	        int blue =   clr & 0x000000ff;    			
-    			
-    			
+    	        int pixel = image.getRGB(col, row); // ( width, height )
+    	        Color color = new Color(pixel, true);
+                int red = color.getRed();
+                int green = color.getGreen();
+                int blue = color.getBlue();    	        
+    	        
+    	        g2d.setColor( new Color(red, green, blue) );
+    	        g2d.drawLine(col,row,col,row);
+    	        
     			String coord = tile.getPixelCoordinates( row, col );
     			String[] latLon = coord.split(",");
     			
@@ -173,12 +189,13 @@ public class HGTReader {
 				insertPs.setDouble(7, blue );
 				insertPs.setDouble(8, ele );
 				insertPs.executeUpdate();    			
-    			
-    			
 			}
 		}
 		logger.info("Done " + tile.getName() );
-				
+
+    	g2d.dispose();
+		ImageIO.write(bufferedImage, "png", new File( imageReferenceName ) );		
+		
 	}
 	
 	
