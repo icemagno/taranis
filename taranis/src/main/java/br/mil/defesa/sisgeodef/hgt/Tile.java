@@ -48,9 +48,12 @@ public class Tile {
 		return r;
 	}
 	
-	public String getPixelCoordinates( double row, double col ) {
-		double lon = this.l + ( col * PIXEL_SIZE );
-		double lat = this.t + ( row * PIXEL_SIZE );
+	public String getPixelCoordinates( double col, double row ) {
+		// O laço de pesquisa está indo do canto superior esquerdo (0,0) ( N/W ) para o 
+		// canto inferior direito (3600,3600) ( S/E )
+		
+		double lon = this.l + ( col * PIXEL_SIZE ); // Para andar na direção OESTE -> LESTE || Quadrante OESTE => Somar a longitude até 0 pois está negativa 
+		double lat = this.t - ( row * PIXEL_SIZE ); // Para andar na direção NORTE -> SUL   || Quadrante SUL   => Subtrair a latitude até -90 pois está negativa
 		return lat + "," + lon;
 	}
 	

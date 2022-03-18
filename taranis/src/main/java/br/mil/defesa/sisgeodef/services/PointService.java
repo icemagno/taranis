@@ -59,7 +59,7 @@ public class PointService {
 		if( !outputPath.endsWith("/") ) outputPath = outputPath + "/";
 	}
 
-	public void readSourcePointData( String jobId, int maxPointsPerTile, double tileSize, String srid, double geometricErrorRatio ) {
+	public void generatePointCloud( String jobId, int maxPointsPerTile, double tileSize, String srid, double geometricErrorRatio ) {
 
 		Refine refinamentModel = Refine.ADD;
 		if( this.refinamentModel.toUpperCase().equals("REPLACE") ) refinamentModel = Refine.REPLACE;
@@ -79,12 +79,12 @@ public class PointService {
 		config.setMustReproject( false );
 		config.setSeparatorCharacter( " " );
 		config.setColorBitSize( 16 );
+		config.setzOffset( 0 );
 		config.setZScaleFactor( 0.1 );
 		config.setTileSize( tileSize );
 		config.setMaxNumOfPointsPerTile( maxPointsPerTile );
 		config.setOutputFolderPath( outputPath + jobId );
 		config.setRefinamentModel( refinamentModel );
-		config.setzOffset( 0 );
 		config.setConnectionString(connectionString);
 		config.setUserName(userName);
 		config.setUserPassword(userPassword);
@@ -131,31 +131,19 @@ public class PointService {
 		}		
 	}
 
-	private void generateCloudFromFile( PostgreSqlDBManagerFactory dbManagerFactory, PntcConfig config, double geometricErrorRatio ) {
-		boolean success = false;
+	private void importCloudFromFiles( PntcConfig config ) {
+		
 		try {
-			config.setGeometricErrorRatio(geometricErrorRatio);
-			PntcGenerator generator = new PntcGenerator(config, dbManagerFactory);
 			
-			logger.info("Input path: " + config.getInputPath() );
+			emptyByJob( config.getJobId() );
 			
+			PntcGenerator generator = new PntcGenerator(config, new PostgreSqlDBManagerFactory(config) );
+			logger.info("Import data to database from path: " + config.getInputPath() );
 			generator.readSourcePointData();
-			success = generator.doProcess();
+			logger.info("Done.");
 		} catch ( Exception e ) {
-			
 			e.printStackTrace();
-			
-			logger.info(e.getMessage());
-			Throwable cause = e.getCause();
-			while (cause != null) {
-				cause = cause.getCause();
-			}
 		}	
-		if (success) {
-			logger.info("Finished.");
-		} else {
-			logger.info("Export aborted.");
-		}		
 	}
 	
 	
@@ -282,7 +270,7 @@ public class PointService {
 		
 	}
 
-	public void populatePointTableFromFile(String jobId, int maxPointsPerTile, double tileSize, String srid ) {
+	public void populatePointTableFromFile( String jobId ) {
 
 		Boolean isRunning = runningJobs.get( jobId );
 		if ( isRunning != null && isRunning ) {
@@ -291,38 +279,25 @@ public class PointService {
 		}
 		logger.info( "Job " + jobId + " start." );
 		
-		
 		PntcConfig config = new PntcConfig();		
 		config.setInputPath( sourcePath + jobId ) ;
-		config.setSrid( srid );
-		config.setTargetSrid( "4326" );
-		config.setMustReproject( false );
-		config.setSeparatorCharacter( " " );
-		config.setColorBitSize( 16 );
-		config.setZScaleFactor( 0.1 );
-		config.setTileSize( tileSize );
-		config.setMaxNumOfPointsPerTile( maxPointsPerTile );
 		config.setOutputFolderPath( outputPath + jobId );
-		config.setRefinamentModel( Refine.REPLACE );
-		config.setzOffset( 0 );
 		config.setConnectionString(connectionString);
 		config.setUserName(userName);
 		config.setUserPassword(userPassword);
 		config.setJobId( jobId );
-		
-		logger.info( "Tile size: " + tileSize );
-		logger.info( "Max Points per Tile: " + maxPointsPerTile );
-		
+		config.setSeparatorCharacter( " " );		
+		config.setColorBitSize( 16 );
+		config.setzOffset( 0 );
+		config.setZScaleFactor( 0.1 );
+
 		new File( config.getOutputFolderPath() ).mkdirs();
-		
-		PostgreSqlDBManagerFactory dbManagerFactory = new PostgreSqlDBManagerFactory(config);		
-		
 		
 		runningJobs.put( jobId, true );
 		new Thread() {
 			@Override
 			public void run() {
-				generateCloudFromFile( dbManagerFactory, config, 0.02 );
+				importCloudFromFiles( config );
 				notifyWhenDone( jobId );
 			}
 		}.start();		
@@ -340,15 +315,7 @@ public class PointService {
 		
 		PntcConfig config = new PntcConfig();		
 		config.setInputPath( sourcePath + jobId ) ;
-
-		config.setTargetSrid( "4326" );
-		config.setMustReproject( false );
-		config.setSeparatorCharacter( " " );
-		config.setColorBitSize( 16 );
-		config.setZScaleFactor( 0.1 );
 		config.setOutputFolderPath( outputPath + jobId );
-		config.setRefinamentModel( Refine.REPLACE );
-		config.setzOffset( 0 );
 		config.setConnectionString(connectionString);
 		config.setUserName(userName);
 		config.setUserPassword(userPassword);

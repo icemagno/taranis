@@ -26,13 +26,20 @@ public class PointController {
 	private PointService ptService;
 
 	// Will read database ( JobID ) and generate the Cesium3D Point Cloud
+	
+	// When came from files:
+	// http://localhost:36700/generatepointcloud?srid=2994&maxpoints=10000&tilesize=255&jobid=small&geratio=0.002
+	
+	// When came from SRTM:
+	// http://localhost:36700/generatepointcloud?srid=4326&maxpoints=5000000&tilesize=0.05&jobid=S23W044&geratio=17
+	
 	@RequestMapping( value = "/generatepointcloud", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
     public String generatePointCloud( @RequestParam(value="jobid",required=true) String jobId,
     		@RequestParam(value="srid",required=true) String srid,
     		@RequestParam(value="maxpoints",required=true) Integer maxPointsPerTile,
     		@RequestParam(value="tilesize",required=true) Double tileSize,
     		@RequestParam(value="geratio",required=true) Double geometricErrorRatio) {
-		ptService.readSourcePointData(jobId, maxPointsPerTile, tileSize, srid, geometricErrorRatio );
+		ptService.generatePointCloud(jobId, maxPointsPerTile, tileSize, srid, geometricErrorRatio );
 		return "ok";
     }	
 	// *************************************************************************************************************
@@ -50,12 +57,10 @@ public class PointController {
 		return "ok";
     }	
 
+	// http://localhost:36700/importfromfile?jobid=small
 	@RequestMapping( value = "/importfromfile", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE ) 
-    public String populateFromFile( @RequestParam(value="jobid",required=true) String jobId,
-    		@RequestParam(value="srid",required=true) String srid,
-    		@RequestParam(value="maxpoints",required=true) Integer maxPointsPerTile,
-    		@RequestParam(value="tilesize",required=true) Double tileSize ) {
-		ptService.populatePointTableFromFile(jobId, maxPointsPerTile, tileSize, srid);
+    public String populateFromFile( @RequestParam(value="jobid",required=true) String jobId ) {
+		ptService.populatePointTableFromFile( jobId );
 		return "ok";
     }	
 

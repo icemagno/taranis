@@ -220,12 +220,13 @@ public class PntcGenerator {
 					double y = Double.valueOf(valueArray[1]);
 					double z = (Double.valueOf(valueArray[2]) + config.getzOffset()) * config.getZScaleFactor();
 					
-					
+					/*
 					if( config.getMustReproject() ) {
 						DirectPosition2D destDirectPosition2D = reproject( x, y );
 					    x = destDirectPosition2D.x;
 					    y = destDirectPosition2D.y;
 					}
+					*/
 					
 					
 					if (Double.valueOf(valueArray[2]) < minZ) minZ = Double.valueOf(valueArray[2]);
