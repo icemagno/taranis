@@ -136,9 +136,15 @@ public class PointService {
 		try {
 			config.setGeometricErrorRatio(geometricErrorRatio);
 			PntcGenerator generator = new PntcGenerator(config, dbManagerFactory);
+			
+			logger.info("Input path: " + config.getInputPath() );
+			
 			generator.readSourcePointData();
 			success = generator.doProcess();
 		} catch ( Exception e ) {
+			
+			e.printStackTrace();
+			
 			logger.info(e.getMessage());
 			Throwable cause = e.getCause();
 			while (cause != null) {

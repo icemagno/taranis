@@ -50,7 +50,7 @@ public class Tile {
 	
 	public String getPixelCoordinates( double row, double col ) {
 		double lon = this.l + ( col * PIXEL_SIZE );
-		double lat = this.b + ( row * PIXEL_SIZE );
+		double lat = this.t + ( row * PIXEL_SIZE );
 		return lat + "," + lon;
 	}
 	

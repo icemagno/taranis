@@ -90,6 +90,7 @@ public class PntcGenerator {
 		
 		if( config.getMustReproject() ) {
 			try {
+				Logger.info("From: EPSG:" + config.getSrid() + " to EPSG:" + config.getTargetSrid() );
 			    sourceCrs = CRS.decode("EPSG:" + config.getSrid() );
 			    targetCrs = CRS.decode("EPSG:" + config.getTargetSrid() );
 			    mathTransform = CRS.findMathTransform(sourceCrs, targetCrs, false);

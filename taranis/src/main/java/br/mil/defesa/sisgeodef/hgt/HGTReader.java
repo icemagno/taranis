@@ -127,7 +127,8 @@ public class HGTReader {
 	    
 	    try {
 			for( Tile tile : result ) {
-				processHgt( result.get(0) );
+				logger.info("Processing tile " + tile.getName() );
+				processHgt( tile );
 			}	    
 	    } catch ( Exception e ) {
 	    	logger.error( e.getMessage() );
@@ -142,9 +143,6 @@ public class HGTReader {
 		String imageReferenceName = this.path + "/" + tile.getName() + "_ref.png";
 		
 		ShortBuffer data = readHgtFile( hgtName );
-		
-		logger.info("Processing " + tile.getName() + "...");
-		
 		Connection sqlConnection  =  DriverManager.getConnection( this.config.getConnectionString(), this.config.getUserName(), this.config.getUserPassword() );
 		
         BufferedImage image = ImageIO.read( new File( imageName ) );
@@ -158,9 +156,12 @@ public class HGTReader {
 		// ------------------------------------------------------------
 		
 		for( int col = 0; col < Tile.HGT_ROW_LENGTH; col++  ) {
-			logger.info("Column " + col );
-			for( int row = Tile.HGT_ROW_LENGTH-1; row > -1 ; row--   ) {
-    			int cell = ( Tile.HGT_ROW_LENGTH * (row)) + col;
+			logger.info( tile.getName() + ": " + col + "/" + Tile.HGT_ROW_LENGTH );
+			
+			for( int row = 0; row < Tile.HGT_ROW_LENGTH; row++   ) {
+    			
+				
+				int cell = ( Tile.HGT_ROW_LENGTH * (row)) + col;
     			short ele = data.get(cell);
     			
     	        int pixel = image.getRGB(col, row); // ( width, height )
@@ -169,10 +170,12 @@ public class HGTReader {
                 int green = color.getGreen();
                 int blue = color.getBlue();    	        
     	        
+                // Salva uma copia da imagem de referencia
     	        g2d.setColor( new Color(red, green, blue) );
     	        g2d.drawLine(col,row,col,row);
+    	        // ---------------------------------------
     	        
-    			String coord = tile.getPixelCoordinates( row, col );
+    			String coord = tile.getPixelCoordinates( col, row );
     			String[] latLon = coord.split(",");
     			
     			double lat = Double.valueOf( latLon[0] );
@@ -192,12 +195,10 @@ public class HGTReader {
 			}
 		}
 		logger.info("Done " + tile.getName() );
-
+		sqlConnection.close();
     	g2d.dispose();
 		ImageIO.write(bufferedImage, "png", new File( imageReferenceName ) );		
-		
 	}
-	
 	
     private  ShortBuffer readHgtFile( String hgtFile ) throws Exception {
         FileInputStream fis = new FileInputStream( hgtFile );
