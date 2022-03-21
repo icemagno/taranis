@@ -34,7 +34,7 @@ public class HGTReader {
 	private final String WMSMapSource = "https://maps.geosolutionsgroup.com/geoserver/s2cloudless/wms";
 	private PntcConfig config;
 	private String jobId;
-
+	// https://s2maps-tiles.eu/wmts?layer=s2cloudless-2020_3857&style=default&tilematrixset=GoogleMapsCompatible&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fjpeg&TileMatrix=10&TileCol=386&TileRow=579
 
 	// http://dwtkns.com/srtm30m/
 	
